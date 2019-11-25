@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 监听属性判断 -->
+    <script>
+
+
+        viewModel.prototype._compile = function(e) {
+    for (var t = this,
+    i = e.children,
+    r = /^{{[^<.+>](.+)}}$/,
+    n = /^{{(.+)}}$/,
+    c = /\s+/,
+    a = /\:/,
+    v = 0; v < i.length; v++) {
+        var l = i[v];
+        if (l.hasAttribute("vm-for")) if ("none" != l.style.display) {
+            var s = l.getAttribute("vm-for").split(c),
+            p = s[2];
+            t._binding[p]._directive.push(new Directive("vfor", l, t, s, ""))
+        } else {
+            l.style.display = "block";
+            for (var h = l.parentNode,
+            u = h.children,
+            v = u.length - 1; v > 0 && !u[v].hasAttribute("vm-for"); v--) h.removeChild(u[v]);
+            var s = l.getAttribute("vm-for").split(c),
+            p = s[2];
+            t._binding[p]._directive.push(new Directive("vfor", l, t, s, ""))
+        }
+        if (l.children.length && this._compile(l), l.hasAttribute("vm-click") && (l.onclick = function() {
+            var e = l.getAttribute("vm-click");
+            return t._eachFunc(e)
+        } ()), l.hasAttribute("vm-model") && l.addEventListener("input",
+        function(e) {
+            var r = l.getAttribute("vm-model");
+            return t._binding[r]._directive.push(new Directive("attr", l, t, r, "value")),
+            function() {
+                t.$data[r] = i[e].value
+            }
+        } (v)), l.hasAttribute("vm-bind")) {
+            var p = l.getAttribute("vm-bind"),
+            s = p.split(a);
+            s.length <= 1 ? t._binding[p]._directive.push(new Directive("attr", l, t, p, "innerHTML")) : t._binding[s[1]]._directive.push(new Directive("style", l, t, s[1], s[0]))
+        }
+        if (r.test(l.innerHTML.toString())) {
+            var d = l.innerHTML.toString(),
+            p = n.exec(d)[1],
+            b = p.replace("[", ".").replace("]", ""),
+            o = {
+                beforeTxt: d
+            };
+            try {
+                t._binding[b]._directive.push(new Directive("Txt", l, t, p, "innerHTML", o))
+            } catch(e) {}
+        }
+        if (l.hasAttribute("vm-show")) {
+            var p = l.getAttribute("vm-show").replace("{{", "").replace("}}", ""),
+            b = p.replace("[", ".").replace("]", ""),
+            g = getComputedStyle(l).display,
+            o = {
+                beforeDisplay: g
+            };
+            try {
+                t._binding[b]._directive.push(new Directive("show", l, t, p, "", o))
+            } catch(e) {}
+        }
+        if (l.hasAttribute("vm-src")) {
+            var p = l.getAttribute("vm-src").replace("{{", "").replace("}}", ""),
+            b = p.replace("[", ".").replace("]", "");
+            try {
+                t._binding[b]._directive.push(new Directive("attr", l, t, p, "src"))
+            } catch(e) {}
+        }
+        if (l.hasAttribute("vm-attr")) {
+            var p = l.getAttribute("vm-attr"),
+            b = p.split(a),
+            m = b[1].replace("{{", "").replace("}}", ""),
+            f = m.replace("[", ".").replace("]", "");
+            try {
+                t._binding[f]._directive.push(new Directive("attr", l, t, m, b[0]))
+            } catch(e) {}
+        }
+    }
+    this.$ele.style.visibility = "visible"
+};
+viewModel.prototype.convert = function(t, e, n, i, c) {
+    var r = this._binding[i];
+    if (1 === c) Object.defineProperty(t, e, {
+        get: function() {
+            return n
+        },
+        set: function(t) {
+            if (n != t) {
+                n = t;
+                try {
+                    r._directive.forEach(function(t) {
+                        t.updata()
+                    })
+                } catch(t) {}
+            }
+        }
+    });
+    else {
+        var o = t[e] || {};
+        Object.defineProperty(t, e, {
+            get: function() {
+                return o
+            },
+            set: function(t) {
+                o = t;
+                try {
+                    r._directives.forEach(function(t) {
+                        t.update()
+                    })
+                } catch(t) {}
+            }
+        })
+    }
+};
+function Directive(t, e, i, s, a, h) {
+    this.name = t,
+    this.el = e,
+    this.vm = i,
+    this.exp = s,
+    this.attr = a,
+    h && (this.param = h),
+    this.updata()
+}
+Directive.prototype.updata = function() {
+    if ("attr" == this.name) {
+        var t = this;
+        this.el[this.attr] = this.vm.$data.$get(this.exp),
+        this.el.setAttribute(t.attr, t.vm.$data.$get(this.exp))
+    } else if ("style" == this.name) this.el.style[this.attr] = this.vm.$data.$get(this.exp);
+    else if ("show" == this.name) {
+        var e = this.vm.$data.$get(this.exp) ? this.param.beforeDisplay: "none";
+        this.el.style.display = e
+    } else if ("Txt" == this.name) {
+        var i = this.vm.$data.$get(this.exp),
+        s = this.param.beforeTxt.replace(/^{{(.+)}}$/, i);
+        this.el.innerHTML = s
+    } else if ("vfor" == this.name) {
+        var t = this,
+        a = this.el.cloneNode(!0).innerHTML.toString(),
+        h = this.el.parentNode,
+        n = this.el.tagName,
+        r = this.exp[0];
+        this.vm.$data.$get(this.exp[2]).forEach(function(e, i, s) {
+            var l = document.createElement(n),
+            p = new RegExp(r + ".", "g"),
+            m = a.replace(p, t.exp[2] + "[" + i + "].");
+            l.innerHTML = m,
+            h.appendChild(l)
+        }),
+        this.el.style.display = "none"
+    }
+};
+function viewModel(t) {
+    this._init(t)
+}
+viewModel.prototype._init = function(t) {
+    this.$options = t,
+    this.$ele = document.querySelector(t.el),
+    this.$data = t.data,
+    this.$methods = t.methods,
+    this.$create = t.create,
+    this.$data.$get = function(t) {
+        return new Function("return this." + t).call(this)
+    },
+    this.$data.$set = function(t, e) {
+        new Function("newVal", "this." + t + " = newVal;").call(this, e)
+    },
+    this.$create && this._create()
+},
+viewModel.prototype._eachData = function(t, e) {
+    e = e || "";
+    var i;
+    for (var a in t) t.hasOwnProperty(a) && (this._binding[e + a] = {
+        _directive: []
+    },
+    i = t[a], "object" == typeof i ? (this.convert(t, a, i, e + a, 0), this._eachData(i, e + a + ".")) : this.convert(t, a, i, e + a, 1))
+},
+viewModel.prototype._eachFunc = function(t) {
+    var e = /\(.*\)/.exec(t),
+    i = /^{{/,
+    a = /\[/,
+    n = this;
+    return e ? (e = e[0], t = t.replace(e, ""), e = e.replace(/[\(\)\'\"]/g, "").split(","), e.forEach(function(t, o) {
+        if (i.test(t)) {
+            var c = t.replace("{{", "").replace("}}", "");
+            a.test(c) || (e[o] = n.$data[c])
+        }
+    })) : e = [],
+    this.$methods[t].bind(this.$data, e)
+},
+viewModel.prototype._create = function() {
+    var t = this;
+    return this.$create.bind(this.$data)(function() {
+        t._binding = {},
+        t.$data && t._eachData(t.$data),
+        t.$ele && t._compile(t.$ele)
+    })
+};
+        
+    </script>
+</body>
+</html>

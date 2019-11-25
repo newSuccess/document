@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <div v-model = "name" >
+
+        </div>
+    </div>
+    <!-- 监听属性判断 -->
+    <script>
+        
+            
+        function viewModle (json,callback){
+            var data = {};
+            // for( key in json.data){
+            //     Object.defineProperties(data,{
+            //     key:{
+            //         configurable:true,
+            //         get:function(){
+            //             console.log(key);
+            //             return key;
+            //         },
+            //         set:function(){
+            //             document.getElementById("app").innerHTML = newValue;
+            //         }
+                    
+            //     }
+            // })
+            // }
+            Object.defineProperties(data,{
+                key:{
+                    configurable:true,
+                    get:function(){
+                        document.getElementById("app").innerHTML = newValue;
+                        //return json.data[key];
+                    },
+                    set:function(newValue){
+                        console.log("被更改");
+                        document.getElementById("app").innerHTML = newValue;
+                    }
+                    
+                }
+            })
+            callback();
+        }
+        // viewModle({
+        //     el:"app",
+        //     data:{
+
+        //     }
+        // })
+viewModle({},function(){
+    data.key = "数据绑定"
+})
+
+
+
+        
+    </script>
+</body>
+</html>
