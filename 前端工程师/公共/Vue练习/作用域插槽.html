@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<!--scope="可以是任意字符串"-->
+
+<div id="app">
+    <child-component>
+        <template scope="props">
+            <p>来自父组件的内容</p>
+            <p>{{props.msg}}</p>
+        </template>
+    </child-component>
+</div>
+<script>
+    //作用域插槽是一种特殊的slot，使用一个可以复用的模板替换已渲染元素
+    //scope="props"  props只是一个变量，没有任何含义
+    Vue.component('child-component', {
+        template: '<div class="container">' +
+            '<slot msg="来自子组件的内容"></slot></div>'
+    })
+    let app = new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

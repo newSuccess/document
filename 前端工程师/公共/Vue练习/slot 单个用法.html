@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <child-component>
+        <p>分发的内容</p>
+        <p>更多分发的内容</p>
+    </child-component>
+</div>
+<script>
+    //slot分发的内容,作用域在父组件上
+    //子组件<slot>的备用内容，作用域是子组件本身
+    Vue.component('child-component', {
+        template: '<div><slot><p>如果父组件没有插入内容，我将作为默认出现</p></slot></div>'
+    })
+    let app = new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

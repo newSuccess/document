@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <button v-on:click="warn('asd',$event)">sss</button>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        methods: {
+            warn: function (a, b) {
+                if (b) b.preventDefault()
+                alert(a)
+            }
+        }
+    })
+    var a = [];
+    for (var i = 0; i < 10; i++) {
+        a[i] = function () {
+            console.log(i)
+        }
+    }
+    console.log(JSON.stringify(a))
+    a[6]();
+    if (true) {
+        tmp = 'abc';
+        console.log(tmp);
+        let tmp;
+        console.log(tmp);
+        tmp = 123;
+        console.log(tmp);
+    }
+    console.log(`aaa'\n'`)
+</script>
+</body>
+</html>

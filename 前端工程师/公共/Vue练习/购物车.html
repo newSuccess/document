@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        table {
+            border: 1px solid #e9e9e9;
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+        }
+
+        th, td {
+            padding: 8px 16px;
+            border: 1px solid #e9e9e9;
+            text-align: center;
+        }
+
+        th {
+            background: #ff77ff;
+            color: #5c6b77;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <template v-if="list.length">
+        <table>
+            <tr>
+                <th>序号</th>
+                <th>商品名称</th>
+                <th>商品单价</th>
+                <th>购买数量</th>
+                <th>操作</th>
+                <th><input @click="checkAll" type="checkbox" v-model="isAllCheck"/>全选</th>
+            </tr>
+            <tr v-for="(item,index) in list" :key="item.id">
+                <td>{{index+1}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.price}}</td>
+                <td>
+                    <button @click="item.count-=1" :disabled="item.count===1">-</button>
+                    {{item.count}}
+                    <button @click="item.count+=1">+</button>
+                </td>
+                <td>
+                    <button @click="deleteItem(index)">移除</button>
+                </td>
+                <td>
+                    <input type="checkbox" :value="item.id" v-model="item.isCheck" @click="checkOne(index)">
+                </td>
+            </tr>
+        </table>
+        <div>总价：{{totalPrice}}</div>
+    </template>
+    <template v-else>
+        购物车为空
+    </template>
+</div>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            isAllCheck: false,
+            list: [
+                {id: 1, name: "三星", price: 1000, count: 6, isCheck: false},
+                {id: 2, name: "小米", price: 2000, count: 4, isCheck: false},
+                {id: 3, name: "苹果", price: 3000, count: 9, isCheck: false},
+                {id: 4, name: "华为", price: 4000, count: 8, isCheck: false},
+                {id: 5, name: "一加", price: 5000, count: 9, isCheck: false}
+            ]
+        },
+        computed: {
+            totalPrice: function () {
+                let total = 0;
+                for (let i = 0; i < this.list.length; i++) {
+                    if (this.list[i].isCheck) {
+                        total += this.list[i].price * this.list[i].count;
+                    }
+                }
+                return total.toString().replace(/\B(?=(\d{3})+$)/g, ',');
+            }
+        },
+        methods: {
+            deleteItem(index) {
+                this.list.splice(index, 1);
+            },
+            checkOne(index) {
+                if (this.list[index].isCheck) {
+                    this.list[index].isCheck = false;
+                } else {
+                    this.list[index].isCheck = true;
+                    this.isAllCheck = false;
+                }
+            },
+            checkAll() {
+                this.isAllCheck = !this.isAllCheck;
+                if (this.isAllCheck) {
+                    for (let i = 0; i < this.list.length; i++) {
+                        this.list[i].isCheck = true;
+                    }
+                } else {
+                    for (let i = 0; i < this.list.length; i++) {
+                        this.list[i].isCheck = false;
+                    }
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

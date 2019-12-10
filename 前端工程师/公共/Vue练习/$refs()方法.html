@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <button type="button" @click="handleClick">通过ref获取子组件事件</button>
+    <m-count ref="com"></m-count>
+</div>
+<script>
+    Vue.component('m-count', {
+        template: '<div>子组件事件</div>',
+        data() {
+            return {
+                message: '子组件内容'
+            }
+        }
+    })
+    let app = new Vue({
+        el: '#app',
+        methods: {
+            handleClick() {
+                let msg = this.$refs.com.message;
+                console.log(msg)
+            }
+        }
+    })
+</script>
+</body>
+</html>

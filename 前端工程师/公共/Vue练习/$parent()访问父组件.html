@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    {{message}}
+    <m-count></m-count>
+</div>
+<script>
+    Vue.component('m-count', {
+        template: '<button type="button" @click="handleClick">通过$parent()来修改数据</button>',
+        methods: {
+            handleClick() {
+                this.$parent.message = '来自组件m-count的内容';
+            }
+        }
+    })
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: ''
+        }
+    })
+</script>
+</body>
+</html>

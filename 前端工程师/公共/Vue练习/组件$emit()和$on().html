@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>{{total}}</div>
+    <m-count @add="totalToggle" @cut="totalToggle"></m-count>
+</div>
+<script>
+    Vue.component('m-count', {
+        template: '<div><button type="button" @click="handleAdd">+</button>' +
+            '<button type="button" @click="handleCut">-</button></div>',
+        data() {
+            return {
+                count: 0
+            }
+        },
+        methods: {
+            handleAdd() {
+                this.count++;
+                this.$emit('add', this.count);
+            },
+            handleCut() {
+                this.count--;
+                this.$emit('cut', this.count);
+            }
+        }
+    })
+    let app = new Vue({
+        el: '#app',
+        data: {
+            total: 0
+        },
+        methods: {
+            totalToggle(e) {
+                this.total = e;
+            }
+        }
+    })
+</script>
+</body>
+</html>

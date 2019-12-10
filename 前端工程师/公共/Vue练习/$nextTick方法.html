@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div ref="myDiv">{{msg}}</div>
+    <div v-if="msg1">{{msg1}}</div>
+    <div v-if="msg2">{{msg2}}</div>
+    <div v-if="msg3">{{msg3}}</div>
+    <button @click="changeMsg">切换信息</button>
+    <div id="div" v-if="showDiv" ref="div">这是一段文本</div>
+    <button @click="getText">获取div内容</button>
+</div>
+<script>
+    //实现异步更新
+    new Vue({
+        el: '#app',
+        data: {
+            msg: 'hello vue',
+            msg1: '',
+            msg2: '',
+            msg3: '',
+            showDiv: false
+        },
+        methods: {
+            changeMsg() {
+                this.msg = 'hello';
+                this.msg1 = this.$refs.myDiv.innerHTML;
+                this.$nextTick(() => {
+                    this.msg2 = this.$refs.myDiv.innerHTML;
+                });
+                this.msg3 = this.$refs.myDiv.innerHTML;
+            },
+            getText() {
+                this.showDiv = true;
+                this.$nextTick(() => {
+                    let text = this.$refs.div.innerHTML;
+                    console.log(text)
+                })
+            }
+        }
+    });
+</script>
+</body>
+</html>

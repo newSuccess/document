@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div v-runoob="{color:'green',text:'dasfsd'}"></div>
+</div>
+<script>
+    Vue.directive('runoob',function(el,binding){
+        el.innerHTML=binding.value.text;
+        el.style.backgroundColor=binding.value.color;
+    })
+    new Vue({
+        el:'#app'
+    })
+    let arr=[];
+    arr.length=9;
+    arr[0]=1;
+    console.log(JSON.stringify(arr))
+</script>
+</body>
+</html>

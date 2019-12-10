@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    {{message}}
+    <m-count></m-count>
+</div>
+<script>
+    let bus = new Vue();//使用一个空的Vue实例作为中央事件总线
+    Vue.component('m-count', {
+        template: '<button type="button" @click="handleDispatch">派发事件</button>',
+        methods: {
+            handleDispatch() {
+                bus.$emit('on-message', '123');
+            }
+        }
+    })
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: ''
+        },
+        mounted() {
+            let _this = this;
+            bus.$on('on-message', function (e) {
+                _this.message = e;
+            })
+        }
+    })
+</script>
+</body>
+</html>

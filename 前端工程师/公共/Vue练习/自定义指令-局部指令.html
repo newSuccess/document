@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-focus>
+</div>
+<script>
+    new Vue({
+        el:'#app',
+        directives:{
+            focus:{
+                inserted:function(el){
+                    el.focus();
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

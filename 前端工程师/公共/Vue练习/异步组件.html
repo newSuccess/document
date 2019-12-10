@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <child-component></child-component>
+</div>
+<script>
+    //工厂函数接受一个resolve回调，在收到从服务器下载的组件定义时调用，也可以调用reject(reason)指示加载失败
+    Vue.component('child-component', (resolve, reject) => {
+        window.setTimeout(() => {
+            resolve({
+                template: '<div>我是异步渲染的</div>'
+            })
+        }, 2000)
+    })
+    let app = new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app"></div>
+<script>
+    const child = Vue.extend({
+        template: '<p>{{firstName}}</p>',
+        data() {
+            return {
+                firstName: 'chen'
+            }
+        }
+    })
+    new child().$mount('#app')
+</script>
+</body>
+</html>

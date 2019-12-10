@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <input type="checkbox" id="jack" value="jack" v-model="checkedNames">
+    <label for="jack">jack</label>
+    <span>{{checkedNames}}</span>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            checkedNames: []
+        }
+    })
+</script>
+</body>
+</html>

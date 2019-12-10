@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>{{total}}</p>
+    <m-count v-model="total"></m-count>
+</div>
+<script>
+    Vue.component('m-count',{
+        template:'<button type="button" @click="handleClick">+</button>',
+        data(){
+            return{
+                count:0
+            }
+        },
+        methods:{
+            handleClick(){
+                this.count++;
+                this.$emit('input',this.count);
+            }
+        }
+    })
+    let app=new Vue({
+        el:'#app',
+        data:{
+            total:0
+        },
+        methods:{
+
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        table {
+            border: 1px solid #e9e9e9;
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+        }
+
+        th, td {
+            padding: 8px 16px;
+            border: 1px solid #e9e9e9;
+            text-align: center;
+        }
+
+        th {
+            background: #ff77ff;
+            color: #5c6b77;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <template v-if="list.length">
+        <table v-for="(tableItem,tableIndex) in list" v-if="tableItem.productList.length">
+            <tr>
+                <th><input type="checkbox" @click="handleTableItem(tableItem)" :checked="isCheckedTableItem(tableItem)">{{tableItem.name}}
+                </th>
+                <th>序号</th>
+                <th>商品名称</th>
+                <th>商品单价</th>
+                <th>购买数量</th>
+                <th>操作</th>
+            </tr>
+            <tr v-for="(item,index) in tableItem.productList" :key="item.id">
+                <td>
+                    <input type="checkbox" :value="item.id" v-model="item.isCheck" @click="checkOne(item)"
+                           :checked="isCheck(item)">
+                </td>
+                <td>{{index+1}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.price}}</td>
+                <td>
+                    <button @click="item.count-=1" :disabled="item.count===1">-</button>
+                    {{item.count}}
+                    <button @click="item.count+=1">+</button>
+                </td>
+                <td>
+                    <button @click="deleteItem(index,tableIndex)">移除</button>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <input type="checkbox" @click="checkAll" :checked="isAllCheck">全选
+        </div>
+        <div>总价：{{totalPrice}}</div>
+    </template>
+    <template v-else>
+        购物车为空
+    </template>
+</div>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            list: [{
+                name: "电子产品",
+                productList: [{
+                    id: '1',
+                    name: 'iPhone 7',
+                    price: 6188,
+                    count: 1,
+                    isCheck: false
+                },
+                    {
+                        id: '2',
+                        name: 'iPad Pro',
+                        price: 5188,
+                        count: 1,
+                        isCheck: false
+                    },
+                    {
+                        id: '3',
+                        name: 'MacBook Pro',
+                        price: 21488,
+                        count: 1,
+                        isCheck: false
+                    }
+                ]
+            },
+                {
+                    name: "生活用品",
+                    productList: [{
+                        id: '1',
+                        name: '尺子',
+                        price: 2.00,
+                        count: 1,
+                        isCheck: false
+                    },
+                        {
+                            id: '2',
+                            name: '包装箱',
+                            price: 29.99,
+                            count: 1,
+                            isCheck: false
+                        },
+                        {
+                            id: '3',
+                            name: '毛巾',
+                            price: 15.98,
+                            count: 1,
+                            isCheck: false
+                        }
+                    ]
+                },
+                {
+                    name: "水果蔬菜",
+                    productList: [{
+                        id: '1',
+                        name: '国产香蕉',
+                        price: 2.88,
+                        count: 1,
+                        isCheck: false
+                    },
+                        {
+                            id: '2',
+                            name: '草莓',
+                            price: 15.00,
+                            count: 1,
+                            isCheck: false
+                        },
+                        {
+                            id: '3',
+                            name: '车厘子',
+                            price: 29.99,
+                            count: 1,
+                            isCheck: false
+                        }
+                    ]
+                }
+            ]
+        },
+        computed: {
+            totalPrice: function () {
+                let total = 0;
+                for (let i = 0; i < this.list.length; i++) {
+                    for (let j = 0; j < this.list[i].productList.length; j++) {
+                        if (this.list[i].productList[j].isCheck) {
+                            total += this.list[i].productList[j].price * this.list[i].productList[j].count;
+                        }
+                    }
+                }
+                return total != 0 ? total.toString().replace(/\B(?=(\d{3})+$)/g, ',') : 0;
+            },
+            isAllCheck() {
+                let status = true;
+                for (let i = 0; i < this.list.length; i++) {
+                    for (let j = 0; j < this.list[i].productList.length; j++) {
+                        if (this.list[i].productList[j].isCheck) {
+                            status = true;
+                            return status;
+                        }
+                    }
+                }
+                status = false;
+                return status;
+            }
+        },
+        methods: {
+            checkOne(item) {
+                item.isCheck = !item.isCheck;
+            }
+            ,
+            isCheck(item) {
+                return item.isCheck;
+            }
+            ,
+            deleteItem(index, tableIndex) {
+                this.list[tableIndex].productList.splice(index, 1);
+            }
+            ,
+            handleTableItem(tableItem) {
+                let status = this.isCheckedTableItem(tableItem);
+                status = status ? false : true;
+                for (let j = 0; j < tableItem.productList.length; j++) {
+                    tableItem.productList[j].isCheck = status;
+                }
+            }
+            ,
+            isCheckedTableItem(tableItem) {
+                let status = true;
+                for (let j = 0; j < tableItem.productList.length; j++) {
+                    if (!tableItem.productList[j].isCheck) {
+                        status = false;
+                        return status;
+                    }
+                }
+                return status;
+            }
+            ,
+            checkAll() {
+                let status = this.isAllCheck;
+                status = status ? false : true;
+                for (let i = 0; i < this.list.length; i++) {
+                    for (let j = 0; j < this.list[i].productList.length; j++) {
+                        this.list[i].productList[j].isCheck = status;
+                    }
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    {{data|formatDate}}
+    <span v-html="link"></span>
+    <span v-text="link"></span>
+</div>
+<script>
+    let padDate = (value) => {
+        return value < 10 ? '0' + value : value;
+    }
+    let app = new Vue({
+        el: '#app',
+        data: {
+            data: new Date(),
+            link: '<a href="#">111</a>'
+        },
+        filters: {
+            formatDate: function (value) {
+                let date = new Date(value);
+                let year = date.getFullYear();
+                let month = padDate(date.getMonth() + 1);
+                let day = padDate(date.getDate());
+                let hour = padDate(date.getHours());
+                let minutes = padDate(date.getMinutes());
+                let seconds = padDate(date.getSeconds());
+                return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds;
+            }
+        },
+        mounted: function () {
+            this.timer = setInterval(() => {
+                this.data = new Date();
+            }, 1000);
+        },
+        beforeDestory: function () {
+            if (this.timer) {
+                clearInterval(this.timer);
+            }
+        }
+    })
+</script>
+</body>
+</html>

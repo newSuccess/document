@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <child-component :count="1"></child-component>
+</div>
+<script>
+    //组件在他的模板里递归调用自己，只需给组件设置name的选项就可以了
+    Vue.component('child-component', {
+        name: 'child-component',
+        props: {
+            count: {
+                type: Number,
+                default: 1
+            }
+        },
+        template: '<div class="child"><child-component :count="count+1" v-if="count<3"></child-component></div>'
+    })
+    let app = new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

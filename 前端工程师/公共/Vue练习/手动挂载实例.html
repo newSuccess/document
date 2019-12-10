@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app"></div>
+<script>
+    let myComponent = Vue.extend({
+        template: '<div>{{name}}</div>',
+        data() {
+            return {
+                name: '下午好'
+            }
+        }
+    })
+    new myComponent().$mount('#app')
+    //或者
+    new myComponent({
+        el: '#app'
+    })
+    //或者,在文档之外渲染并且随后挂载
+    let component = new myComponent().$mount();
+    document.getElementById('app').appendChild(component.$el);
+</script>
+</body>
+</html>

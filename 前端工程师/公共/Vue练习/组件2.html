@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <ol>
+        <todo-item v-for="item of sites" :todo="item"></todo-item>
+    </ol>
+</div>
+<script>
+    Vue.component('todo-item', {
+        template: '<li>{{todo.text}}</li>',
+        props: ['todo']
+    })
+    new Vue({
+        el: '#app',
+        data: {
+            sites: [
+                {text: 'Runoob'},
+                {text: 'Google'},
+                {text: 'Taobao'}
+            ]
+        }
+    })
+</script>
+</body>
+</html>

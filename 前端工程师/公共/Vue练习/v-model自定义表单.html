@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>{{total}}</p>
+    <m-count v-model="total"></m-count>
+    <button type="button" @click="handleCut">-</button>
+</div>
+<script>
+    //实现具有双向绑定v-model组件满足两个要求
+    //接受一个value属性
+    //再有新的value时触发input事件
+    Vue.component('m-count', {
+        props: ['value'],
+        template: '<input :value="value" @input="updateValue">',
+        methods: {
+            updateValue(e) {
+                this.$emit('input', e.target.value)
+            }
+        }
+    })
+    let app = new Vue({
+        el: '#app',
+        data: {
+            total: 0
+        },
+        methods: {
+            handleCut(e) {
+                console.log(e)
+                this.total--;
+            }
+        }
+    })
+</script>
+</body>
+</html>
